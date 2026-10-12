@@ -31,6 +31,7 @@ app.route("/properties", propertiesApp)
 app.notFound((c) => c.json({ error: "Route not found" }, 404));
 
 app.onError((error, c) => {
+  console.error("onError:", error)
   if (error instanceof HTTPException) {
     return c.json({ error: error.message }, error.status);
   }

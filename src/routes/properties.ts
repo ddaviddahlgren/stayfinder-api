@@ -47,17 +47,25 @@ propertiesApp.put(
 
     const updated = await db.updateProperty(sb, id, updates);
     if (updated) return c.json(updated);
+
+    const exists = await db.getPropertyById(sb, id);
+    if (exists) {
+      throw new HTTPException(403, { message: "You do not own this property" });
+    }
+    throw new HTTPException(404, { message: "Property not found" });
   },
 );
 
 propertiesApp.delete("/:id", requireAuth, validatePropertyParam, async (c) => {
-    const sb = c.get("supabase")
-    const { id } = c.req.valid("param")
+  const sb = c.get("supabase");
+  const { id } = c.req.valid("param");
 
-    const deleted = await db.deleteProperty(sb, id)
-    if (deleted) return c.json({ message: "Property deleted" })
+  const deleted = await db.deleteProperty(sb, id);
+  if (deleted) return c.json({ message: "Property deleted" });
 
-    const exists = await db.getPropertyById(sb, id)
-    if (exists) throw new HTTPException(403, { message: "You do not own this property"})
-    throw new HTTPException(404, { message: "Property not found" })
-})
+  const exists = await db.getPropertyById(sb, id);
+  if (exists) {
+    throw new HTTPException(403, { message: "You do not own this property" });
+  }
+  throw new HTTPException(404, { message: "Property not found" });
+});
