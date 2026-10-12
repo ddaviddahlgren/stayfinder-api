@@ -3,9 +3,10 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
 import { env } from "./env.js";
+import type { AppEnv } from "./types/env.js";
 import { optionalAuth } from "./middleware/auth.js";
 import { authApp } from "./routes/auth.js";
-import type { AppEnv } from "./types/env.js";
+import { propertiesApp } from "./routes/properties.js";
 
 const app = new Hono<AppEnv>({ strict: false });
 
@@ -24,6 +25,8 @@ app.use("*", optionalAuth);
 app.get("/", (c) => c.text("StayFinder API"));
 
 app.route("/auth", authApp);
+
+app.route("/properties", propertiesApp)
 
 app.notFound((c) => c.json({ error: "Route not found" }, 404));
 
