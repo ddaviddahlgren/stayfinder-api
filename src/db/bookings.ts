@@ -19,7 +19,7 @@ export async function createBooking(
   property_id: string,
   booking: NewBooking,
 ): Promise<Booking> {
-  const { data, error } = sb
+  const { data, error } = await sb
     .from("bookings")
     .insert({ ...booking, property_id: property_id, total_price: 0 })
     .select()
@@ -34,7 +34,7 @@ export async function updateBooking(
   bookingId: string,
   updates: BookingUpdate,
 ): Promise<Booking | null> {
-  const { data, error } = sb
+  const { data, error } = await sb
     .from("bookings")
     .update(updates)
     .eq("id", bookingId)
