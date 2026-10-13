@@ -1,5 +1,6 @@
 import type { SupabaseServerClient } from "../types/env.js";
 import type { Booking, BookingUpdate, NewBooking } from "../types/bookings.js";
+import { DbError } from "../lib/dbErrors.js";
 
 export async function listBookings(
   sb: SupabaseServerClient,
@@ -10,7 +11,7 @@ export async function listBookings(
     .select("*")
     .eq("property_id", property_id)
     .order("check_in", { ascending: true });
-  if (error) throw error;
+  if (error) throw new DbError(error);
   return (data ?? []) as Booking[];
 }
 
@@ -24,7 +25,7 @@ export async function createBooking(
     .insert({ ...booking, property_id: property_id, total_price: 0 })
     .select()
     .single();
-  if (error) throw error;
+  if (error) throw new DbError(error);
   return data as Booking;
 }
 
@@ -41,7 +42,7 @@ export async function updateBooking(
     .eq("property_id", property_id)
     .select()
     .maybeSingle();
-  if (error) throw error;
+  if (error) throw new DbError(error);
   return data as Booking | null;
 }
 
@@ -57,6 +58,6 @@ export async function deleteBooking(
     .eq("property_id", propertyId)
     .select()
     .maybeSingle();
-  if (error) throw error;
+  if (error) throw new DbError(error);
   return data as Booking | null;
 }

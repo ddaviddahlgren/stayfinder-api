@@ -30,22 +30,26 @@ export const validateProperty = zValidator("json", propertySchema, (result, c) =
   if (!result.success) {
     return c.json({ error: "Invalid data", issues: result.error.issues }, 400);
   }
+  return undefined
 });
 
 export const validatePartialProperty = zValidator("json", partialPropertySchema, (result, c) => {
   if (!result.success) {
     return c.json({ error: "Invalid data", issues: result.error.issues }, 400);
   }
+  return undefined
 });
 
 export const validatePropertyParam = zValidator("param", paramSchema, (result, c) => {
   if (!result.success) {
     return c.json({ error: "Invalid id", issues: result.error.issues }, 400);
   }
+  return undefined
 });
 
 export const validateListQuery = zValidator("query", listQuerySchema, (result, c) => {
   if (!result.success) {
     return c.json({ error: "Invalid query", issues: result.error.issues }, 400);
   }
+  return undefined
 });

@@ -13,6 +13,7 @@ const validateCredentials = zValidator("json", credentialsSchema, (result, c) =>
   if (!result.success) {
     return c.json({ error: "Invalid data", issues: result.error.issues }, 400);
   }
+  return undefined
 });
 
 export const authApp = new Hono<AppEnv>();

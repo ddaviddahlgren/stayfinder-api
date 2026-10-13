@@ -22,3 +22,11 @@ export function mapDbError(
       return null;
   }
 }
+
+export class DbError extends Error {
+  code: string;
+  constructor(source: { message: string; code: string }) {
+    super(source.message);
+    this.code = source.code;
+  }
+}

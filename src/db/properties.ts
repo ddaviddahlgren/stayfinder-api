@@ -1,5 +1,6 @@
 import type { SupabaseServerClient } from "../types/env.js";
 import type { NewProperty, Property, PropertyFilters } from "../types/property.js";
+import { DbError } from "../lib/dbErrors.js";
 
 export async function listProperties(
   sb: SupabaseServerClient,
@@ -19,7 +20,7 @@ export async function listProperties(
   }
 
   const { data, error } = await query;
-  if (error) throw error;
+  if (error) throw new DbError(error);
   return (data ?? []) as Property[];
 }
 
@@ -32,7 +33,7 @@ export async function getPropertyById(
     .select("*")
     .eq("id", id)
     .maybeSingle();
-  if (error) throw error;
+  if (error) throw new DbError(error);
   return data as Property | null;
 }
 
@@ -47,7 +48,7 @@ export async function createProperty(
     .insert(property)
     .select()
     .single();
-  if (error) throw error;
+  if (error) throw new DbError(error);
   return data as Property;
 }
 
@@ -63,7 +64,7 @@ export async function updateProperty(
     .eq("id", id)
     .select()
     .maybeSingle();
-  if (error) throw error;
+  if (error) throw new DbError(error);
   return data as Property | null;
 }
 
@@ -77,6 +78,6 @@ export async function deleteProperty(
     .eq("id", id)
     .select()
     .maybeSingle();
-  if (error) throw error;
+  if (error) throw new DbError(error);
   return data as Property | null;
 }
