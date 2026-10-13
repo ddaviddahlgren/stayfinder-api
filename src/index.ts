@@ -8,6 +8,7 @@ import { optionalAuth } from "./middleware/auth.js";
 import { mapDbError } from "./lib/dbErrors.js";
 import { authApp } from "./routes/auth.js";
 import { propertiesApp } from "./routes/properties.js";
+import { bookingsApp } from "./routes/bookings.js";
 
 const app = new Hono<AppEnv>({ strict: false });
 
@@ -28,6 +29,8 @@ app.get("/", (c) => c.text("StayFinder API"));
 app.route("/auth", authApp);
 
 app.route("/properties", propertiesApp)
+
+app.route("properties/:propertyId/bookings", bookingsApp)
 
 app.notFound((c) => c.json({ error: "Route not found" }, 404));
 
