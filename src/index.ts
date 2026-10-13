@@ -5,6 +5,7 @@ import { HTTPException } from "hono/http-exception";
 import { env } from "./env.js";
 import type { AppEnv } from "./types/env.js";
 import { optionalAuth } from "./middleware/auth.js";
+import { mapDbError } from "./lib/dbErrors.js";
 import { authApp } from "./routes/auth.js";
 import { propertiesApp } from "./routes/properties.js";
 
@@ -34,6 +35,10 @@ app.onError((error, c) => {
   console.error("onError:", error)
   if (error instanceof HTTPException) {
     return c.json({ error: error.message }, error.status);
+  }
+  const mapped = mapDbError(error)
+  if (mapped) {
+    return c.json({ error: mapped.message }, mapped.status)
   }
   console.error(error);
   return c.json({ error: "Internal server error" }, 500);
