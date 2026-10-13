@@ -12,7 +12,7 @@ const propertySchema = z.object({
 
 const partialPropertySchema = propertySchema
   .partial()
-  .refine((body) => Object.keys(body).length > 0, "At least one field is required");
+  .refine((b) => Object.keys(b).length > 0, "At least one field is required");
 
 const paramSchema = z.object({
   id: z.uuid("Property id must be a valid UUID"),
