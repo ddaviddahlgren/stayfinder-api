@@ -35,8 +35,6 @@ app.route("/properties/:propertyId/bookings", bookingsApp)
 app.notFound((c) => c.json({ error: "Route not found" }, 404));
 
 app.onError((error, c) => {
-  console.log("onError reached:", error)
-  console.error("onError:", error)
   if (error instanceof HTTPException) {
     return c.json({ error: error.message }, error.status);
   }
