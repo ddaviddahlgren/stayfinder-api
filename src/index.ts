@@ -28,9 +28,9 @@ app.get("/", (c) => c.text("StayFinder API"));
 
 app.route("/auth", authApp);
 
-app.route("/properties", propertiesApp)
+app.route("/properties", propertiesApp);
 
-app.route("/properties/:propertyId/bookings", bookingsApp)
+app.route("/properties/:propertyId/bookings", bookingsApp);
 
 app.notFound((c) => c.json({ error: "Route not found" }, 404));
 
@@ -38,9 +38,9 @@ app.onError((error, c) => {
   if (error instanceof HTTPException) {
     return c.json({ error: error.message }, error.status);
   }
-  const mapped = mapDbError(error)
+  const mapped = mapDbError(error);
   if (mapped) {
-    return c.json({ error: mapped.message }, mapped.status)
+    return c.json({ error: mapped.message }, mapped.status);
   }
   console.error(error);
   return c.json({ error: "Internal server error" }, 500);
