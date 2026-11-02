@@ -9,9 +9,9 @@ meApp.get("/bookings", requireAuth, async (c) => {
     const sb = c.get("supabase")
     const user = c.get("user")!
 
-    const [made, recieved] = await Promise.all([
+    const [made, received] = await Promise.all([
         db.listMyBookings(sb, user.id),
         db.listBookingsOnMyProperties(sb, user.id)
     ])
-    return c.json({ made, recieved })
+    return c.json({ made, received })
 })

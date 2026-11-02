@@ -26,7 +26,7 @@ export async function listMyBookings(
 ): Promise<BookingWithProperty[]> {
   const { data, error } = await sb
     .from("bookings")
-    .select("*, properties(id, title, location")
+    .select("*, properties(id, title, location)")
     .eq("user_id", userId)
     .order("check_in", { ascending: true });
   if (error) throw new DbError(error)
