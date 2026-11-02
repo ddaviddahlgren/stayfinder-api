@@ -9,18 +9,47 @@ const credentialsSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-const validateCredentials = zValidator("json", credentialsSchema, (result, c) => {
+const validateCredentials = zValidator(
+  "json",
+  credentialsSchema,
+  (result, c) => {
+    if (!result.success) {
+      return c.json(
+        { error: "Invalid data", issues: result.error.issues },
+        400,
+      );
+    }
+    return undefined;
+  },
+);
+
+const registerSchema = credentialsSchema.extend({
+  first_name: z.string().trim().min(1, "First name is required"),
+  last_name: z.string().trim().min(1, "Last name is required"),
+});
+
+const validateRegister = zValidator("json", registerSchema, (result, c) => {
   if (!result.success) {
     return c.json({ error: "Invalid data", issues: result.error.issues }, 400);
   }
-  return undefined
+  return undefined;
 });
 
 export const authApp = new Hono<AppEnv>();
 
-authApp.post("/register", validateCredentials, async (c) => {
-  const { email, password } = c.req.valid("json");
-  const { data, error } = await c.get("supabase").auth.signUp({ email, password });
+authApp.post("/register", validateRegister, async (c) => {
+  const { email, password, first_name, last_name } = c.req.valid("json");
+  const { data, error } = await c.get("supabase").auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        first_name,
+        last_name,
+        full_name: `${first_name} ${last_name}`,
+      },
+    },
+  });
 
   if (error) return c.json({ error: error.message }, 400);
   return c.json({ user: data.user }, 201);
