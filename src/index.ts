@@ -7,6 +7,7 @@ import type { AppEnv } from "./types/env.js";
 import { optionalAuth } from "./middleware/auth.js";
 import { mapDbError } from "./lib/dbErrors.js";
 import { authApp } from "./routes/auth.js";
+import { meApp } from "./routes/me.js";
 import { propertiesApp } from "./routes/properties.js";
 import { bookingsApp } from "./routes/bookings.js";
 
@@ -25,6 +26,8 @@ app.use(
 app.use("*", optionalAuth);
 
 app.get("/", (c) => c.text("StayFinder API"));
+
+app.route("/me", meApp)
 
 app.route("/auth", authApp);
 

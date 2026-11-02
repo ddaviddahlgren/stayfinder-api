@@ -18,3 +18,7 @@ export interface Booking extends NewBooking {
 }
 
 export type BookingUpdate = Partial<NewBooking> & { status?: BookingStatus}
+
+export interface BookingWithProperty extends Booking {
+    properties: {id: string, title:string, location: string }
+}

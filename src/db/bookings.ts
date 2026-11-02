@@ -1,5 +1,10 @@
 import type { SupabaseServerClient } from "../types/env.js";
-import type { Booking, BookingUpdate, NewBooking } from "../types/bookings.js";
+import type {
+  Booking,
+  BookingUpdate,
+  BookingWithProperty,
+  NewBooking,
+} from "../types/bookings.js";
 import { DbError } from "../lib/dbErrors.js";
 
 export async function listBookings(
@@ -13,6 +18,32 @@ export async function listBookings(
     .order("check_in", { ascending: true });
   if (error) throw new DbError(error);
   return (data ?? []) as Booking[];
+}
+
+export async function listMyBookings(
+  sb: SupabaseServerClient,
+  userId: string,
+): Promise<BookingWithProperty[]> {
+  const { data, error } = await sb
+    .from("bookings")
+    .select("*, properties(id, title, location")
+    .eq("user_id", userId)
+    .order("check_in", { ascending: true });
+  if (error) throw new DbError(error)
+    return (data ?? []) as unknown as BookingWithProperty[]
+}
+
+export async function listBookingsOnMyProperties(
+  sb: SupabaseServerClient,
+  userId: string,
+): Promise<BookingWithProperty[]> {
+  const { data, error } = await sb
+    .from("bookings")
+    .select("*, properties!inner(id, title, location, owner_id)")
+    .eq("properties.owner_id", userId)
+    .order("check_in", { ascending: true });
+  if (error) throw new DbError(error);
+  return (data ?? []) as unknown as BookingWithProperty[];
 }
 
 export async function createBooking(
